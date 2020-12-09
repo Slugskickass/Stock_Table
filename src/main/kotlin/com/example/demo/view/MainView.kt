@@ -1,14 +1,20 @@
 package com.example.demo.view
 
-import com.example.demo.app.Styles
 import javafx.collections.FXCollections
 import tornadofx.*
-
+import yahoofinance.YahooFinance
+import yahoofinance.Stock
+import java.math.BigDecimal
 
 
 class MainView : View("Stocks") {
 
     class Stock(val id: Int, val name: String, val start_val: Double, val current_val: Double) {}
+
+    fun return_price(name: String): Double {
+        val stocker = YahooFinance.get(name)
+        return stocker.getQuote().getPrice().toDouble()
+    }
 
     private val stocks = FXCollections.observableArrayList<Stock>(
         Stock(1, "BP", 123.1, 23.5),
