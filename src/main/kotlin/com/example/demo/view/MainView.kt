@@ -47,11 +47,17 @@ class MainView : View("Stocks") {
 
     override val root =  vbox{
 
+         val side = hbox {
+             button("Update Prices") {
+                 textFill = Color.RED
+                 action { button_pressed() }
+             }
+             button("Press Me") {
+                 textFill = Color.RED
+                 action { button_pressed() } 
+             }
 
-        button("Press Me") {
-            textFill = Color.RED
-            action { button_pressed()}
-        }
+         }
 
         tableview(stocks) {
             isEditable = true
@@ -72,7 +78,7 @@ class MainView : View("Stocks") {
     }
 }
 
-private fun button_pressed(stock: MainView.Stock){
+private fun button_pressed(){
     println("Hello")
     println()
 }
