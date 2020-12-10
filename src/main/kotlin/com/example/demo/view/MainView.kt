@@ -1,5 +1,6 @@
 package com.example.demo.view
 
+import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
 import javafx.scene.paint.Color
 import tornadofx.*
@@ -17,8 +18,12 @@ class MainView : View("Stocks") {
         var id by property(id)
         fun idProperty() = getProperty(Stock::id)
 
-        var name by property(name)
-        fun nameProperty() = getProperty(Stock::name)
+    //    var name by property(name)
+    //    fun nameProperty() = getProperty(Stock::name)
+        private val nameProperty = SimpleStringProperty(name)
+        fun nameProperty() = nameProperty
+        var name by nameProperty
+
 
         var start_val by property(start_val)
         fun start_valProperty() = getProperty(Stock::start_val)
@@ -42,9 +47,10 @@ class MainView : View("Stocks") {
 
     override val root =  vbox{
 
+
         button("Press Me") {
             textFill = Color.RED
-            action { println("Button pressed!") }
+            action { button_pressed()}
         }
 
         tableview(stocks) {
@@ -63,6 +69,10 @@ class MainView : View("Stocks") {
                 }
             }
         }
-        }
     }
+}
 
+private fun button_pressed(stock: MainView.Stock){
+    println("Hello")
+    println()
+}
