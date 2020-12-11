@@ -57,11 +57,11 @@ class MainView : View("Stocks") {
          val side = hbox {
              button("Update Prices") {
                  textFill = Color.RED
-                 action { button_pressed() }
+                 action { button_pressed1() }
              }
              button("Press Me") {
                  textFill = Color.GREEN
-                 action { button_pressed() } 
+                 action { button_pressed2() }
              }
 
          }
@@ -84,7 +84,13 @@ class MainView : View("Stocks") {
             }
         }
     }
-    private fun button_pressed(){
+    private fun button_pressed1(){
+        for (current in stocks){
+            current.current_val = return_price(current.name) ?: 0.0
+            current.stock_currency = return_currency(current.name) ?: "NA"
+        }
+    }
+    private fun button_pressed2(){
         for (current in stocks){
             current.current_val = return_price(current.name) ?: 0.0
             current.stock_currency = return_currency(current.name) ?: "NA"
