@@ -8,9 +8,9 @@ import yahoofinance.YahooFinance
 import yahoofinance.Stock
 import java.math.BigDecimal
 
-private fun return_price(name: String): Double {
-    val stocker = YahooFinance.get(name)
-    return stocker.getQuote().getPrice().toDouble()
+private fun return_price(name: String): Double? {
+    val stocker = YahooFinance.get(name)?.quote?.price?.toDouble()
+    return stocker
 }
 class MainView : View("Stocks") {
 
@@ -34,9 +34,9 @@ class MainView : View("Stocks") {
     }
 
 
-    private val stocks = FXCollections.observableArrayList<Stock>(
-        Stock(1, "BP", 123.1, return_price("BP.L")),
-        Stock(2, "CLIG", 123.1, 12.1),
+    public val stocks = FXCollections.observableArrayList<Stock>(
+        Stock(1, "BP", 123.1, return_price("BP.L") ?:0.0),
+        Stock(2, "CLIG.L", 123.1, 23.5),
         Stock(3, "DLG", 123.1, 23.5),
         Stock(4, "EVR", 123.1, 23.5),
         Stock(5, "FIS", 123.1, 23.5),
@@ -53,7 +53,7 @@ class MainView : View("Stocks") {
                  action { button_pressed() }
              }
              button("Press Me") {
-                 textFill = Color.RED
+                 textFill = Color.GREEN
                  action { button_pressed() } 
              }
 
@@ -76,9 +76,11 @@ class MainView : View("Stocks") {
             }
         }
     }
+    private fun button_pressed(){
+        for (current in stocks){
+            current.current_val = return_price(current.name) ?: 0.0
+        }
+    }
 }
 
-private fun button_pressed(){
-    println("Hello")
-    println()
-}
+
