@@ -20,7 +20,7 @@ private fun return_currency(name: String): String? {
 
 class MainView : View("Stocks") {
 
-    class Stock(id: Int, name: String,  stock_currency: String, start_val: Double, current_val: Double) {
+    class Stock(id: Int, name: String,  stock_currency: String, start_val: Double, current_val: Double, current_return: Double) {
         var id by property(id)
         fun idProperty() = getProperty(Stock::id)
 
@@ -39,17 +39,20 @@ class MainView : View("Stocks") {
         var current_val by property(current_val)
         fun current_valProperty() = getProperty(Stock::current_val)
 
+        var current_return by property(current_return)
+        fun current_returnProperty() = getProperty(Stock::current_return)
+
     }
 
 
     public val stocks = FXCollections.observableArrayList<Stock>(
-        Stock(1, "BP.L", "GBP", 2.3890, return_price("BP.L") ?:0.0),
-        Stock(2, "CLIG.L", "GBP", 4.3950, 0.0),
-        Stock(3, "EVR.L",  "GBP", 3.99540, 0.0),
-        Stock(4, "FIS",  "GBP",112.2329, 0.0),
-        Stock(5, "IAG.L",  "GBP",1.5454, 0.0),
-        Stock(6, "PFE", "GBP", 27.7895, 0.0)
-    )
+        Stock(1, "BP.L", "GBP", 238.90, 0.0, 1.0),
+        Stock(2, "CLIG.L", "GBP", 439.50, 0.0, 1.0),
+        Stock(3, "EVR.L",  "GBP", 399.540, 0.0, 1.0),
+        Stock(4, "FIS",  "GBP",112.2329, 0.0, 1.0),
+        Stock(5, "IAG.L",  "GBP",154.54, 0.0, 1.0),
+        Stock(6, "PFE", "GBP", 27.7895, 0.0, 1.0)
+    )//return_price("BP.L" ?:0.0),
 
 
     override val root =  vbox{
@@ -72,13 +75,14 @@ class MainView : View("Stocks") {
             column("Name", Stock::nameProperty).makeEditable()
             column("Currency", Stock::stock_currencyProperty).makeEditable()
             column("Start Value", Stock::start_valProperty).makeEditable()
-            column("Current Value", Stock::current_valProperty).makeEditable().cellFormat {
+            column("Current Value", Stock::current_valProperty).makeEditable()
+            column("Current return", Stock::current_returnProperty).makeEditable().cellFormat {
                 text = it.toString()
                 style {
-                    if (it < 18) {
+                    if (it < 1) {
                         textFill = Color.RED
                     } else {
-                        textFill = Color.BLACK
+                        textFill = Color.GREEN
                     }
                 }
             }
@@ -88,6 +92,11 @@ class MainView : View("Stocks") {
         for (current in stocks){
             current.current_val = return_price(current.name) ?: 0.0
             current.stock_currency = return_currency(current.name) ?: "NA"
+            current.current_return = current.start_val.toDouble() / current.current_val.toDouble()
+            print(current.name)
+            print(' ')
+            println(current.current_val.toDouble() / current.start_val.toDouble() )
+
         }
     }
     private fun button_pressed2(){
