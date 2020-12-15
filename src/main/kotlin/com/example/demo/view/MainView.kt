@@ -20,7 +20,7 @@ private fun return_currency(name: String): String? {
 
 class MainView : View("Stocks") {
 
-    class Stock(id: Int, name: String,  stock_currency: String, start_val: Double, current_val: Double, current_return: Double) {
+    class Stock(id: Int, name: String,  number_held: Int, stock_currency: String, start_val: Double, current_val: Double, current_return: Double) {
         var id by property(id)
         fun idProperty() = getProperty(Stock::id)
 
@@ -29,6 +29,9 @@ class MainView : View("Stocks") {
         private val nameProperty = SimpleStringProperty(name)
         fun nameProperty() = nameProperty
         var name by nameProperty
+
+        var number_held by property(number_held)
+        fun number_heldProperty() = getProperty(Stock::number_held)
 
         var stock_currency by property(stock_currency)
         fun stock_currencyProperty() = getProperty(Stock::stock_currency)
@@ -46,12 +49,12 @@ class MainView : View("Stocks") {
 
 
     public val stocks = FXCollections.observableArrayList<Stock>(
-        Stock(1, "BP.L", "GBP", 238.90, 0.0, 1.0),
-        Stock(2, "CLIG.L", "GBP", 439.50, 0.0, 1.0),
-        Stock(3, "EVR.L",  "GBP", 399.540, 0.0, 1.0),
-        Stock(4, "FIS",  "GBP",112.2329, 0.0, 1.0),
-        Stock(5, "IAG.L",  "GBP",154.54, 0.0, 1.0),
-        Stock(6, "PFE", "GBP", 27.7895, 0.0, 1.0)
+        Stock(1, "BP.L", 1,"GBP", 238.90, 1.0, 1.0),
+        Stock(2, "CLIG.L", 1,"GBP", 439.50, 1.0, 1.0),
+        Stock(3, "EVR.L",  1,"GBP", 399.540, 1.0, 1.0),
+        Stock(4, "FIS",  1,"GBP",151.8057, 1.0, 1.0),
+        Stock(5, "IAG.L",  1,"GBP",154.54, 1.0, 1.0),
+        Stock(6, "PFE", 1,"GBP", 36.880, 1.0, 1.0)
     )//return_price("BP.L" ?:0.0),
 
 
@@ -73,6 +76,7 @@ class MainView : View("Stocks") {
             isEditable = true
             column("ID", Stock::idProperty).makeEditable()
             column("Name", Stock::nameProperty).makeEditable()
+            column("Number held", Stock::number_heldProperty).makeEditable()
             column("Currency", Stock::stock_currencyProperty).makeEditable()
             column("Start Value", Stock::start_valProperty).makeEditable()
             column("Current Value", Stock::current_valProperty).makeEditable()
@@ -87,15 +91,23 @@ class MainView : View("Stocks") {
                 }
             }
         }
+ //       piechart("Value") {
+ //           for (current in stocks){
+ //               data(current.name, 10.0)
+ //           }
+//        }
+
+
+
     }
     private fun button_pressed1(){
         for (current in stocks){
             current.current_val = return_price(current.name) ?: 0.0
             current.stock_currency = return_currency(current.name) ?: "NA"
-            current.current_return = current.start_val.toDouble() / current.current_val.toDouble()
-            print(current.name)
-            print(' ')
-            println(current.current_val.toDouble() / current.start_val.toDouble() )
+            current.current_return = 100 * (( current.current_val.toDouble() / current.start_val.toDouble()) -1 )
+    //        print(current.name)
+    //        print(' ')
+    //        println(current.current_val.toDouble() / current.start_val.toDouble() )
 
         }
     }
