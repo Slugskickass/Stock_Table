@@ -5,6 +5,8 @@ import javafx.collections.FXCollections
 import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
 import javafx.scene.chart.PieChart
+import javafx.scene.control.SelectionMode
+import javafx.scene.control.TableView
 import javafx.scene.paint.Color
 import tornadofx.*
 import yahoofinance.YahooFinance
@@ -26,6 +28,7 @@ val dollartopound = 0.7
 
 class MainView : View("Stocks") {
 
+    val available_currencies = FXCollections.observableArrayList<String>("GBp", "USD", "Euro")
 
     class Stock(
         id: Int,
@@ -88,21 +91,32 @@ class MainView : View("Stocks") {
         val side = hbox {
             button("Update Prices") {
                 textFill = Color.RED
-                action { button_pressed1() }
-            }
+                action { button_pressed1() }}
+
             button("Delete Row") {
                 textFill = Color.GREEN
-                action { button_pressed2() }
-            }
+                action { button_pressed2() }}
+
             button("Add Row") {
                 textFill = Color.GREEN
-                action { button_pressed2() }
-            }
+                action { button_pressed2() }}
 
+            button("Load") {
+                textFill = Color.BLUE
+                action { load() }}
+
+            button("Save") {
+                textFill = Color.BLUE
+                action { save() }}
+            combobox<String> { items=available_currencies }
         }
 
-        tableview(stocks) {
-            isEditable = true
+        val mytable = tableview(stocks){
+        //   mytable.setFixedCellSize(25)
+        //   table.prefHeightProperty().bind(Bindings.size(table.getItems()).multiply(table.getFixedCellSize()).add(30))
+
+           isEditable = true
+
             column("ID", Stock::idProperty)
             column("Name", Stock::nameProperty).makeEditable().useTextField()
             column("Number held", Stock::number_heldProperty).makeEditable()
@@ -115,14 +129,19 @@ class MainView : View("Stocks") {
                 style {
                     if (it < 1) {
                         textFill = Color.RED
-                     //   backgroundColor += c("#000010")
                         backgroundColor += (Color.LIGHTGRAY)
                     } else {
                         textFill = Color.GREEN
                     }
                 }
             }
+        }
 
+        val middle = hbox {
+        var total_value: Double   = 0.0
+//            for (items in stocks){values = values + items.current_return}
+//            label(" The current return is $values")
+//        total_value  = stocks.forEach( { it.current_return +=total_value })
         }
 
         piechart("Current Retun", piedata)
@@ -140,20 +159,15 @@ class MainView : View("Stocks") {
     }
 
     private fun button_pressed2(){
-   //     val stocksMap = stocks.map { item -> item.name
-   //     stocks.}
-    val new_stocks = stocks
-        for (current in new_stocks){
-            current.current_val = return_price(current.name) ?: 0.0
-            current.stock_currency = return_currency(current.name) ?: "NA"
-            current.current_return = 100 * (( current.current_val.toDouble() / current.start_val.toDouble()) -1 )
-            current.current_holding = current.number_held * current.current_val
-            if (current.stock_currency == "GBp" ){current.current_holding =current.current_holding / 100}
-            if (current.stock_currency == "USD" ){current.current_holding =current.current_holding * dollartopound}
+//
+//        tableView().getColumns().get(0).setVisible(false);
+//        tableView.getColumns().get(0).setVisible(true);
+//
         }
-        stocks.clear()
-        stocks = new_stocks
-        }
+
+    private fun load(){}
+
+    private fun save(){}
     }
 
 
